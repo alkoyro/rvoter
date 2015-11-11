@@ -12,34 +12,32 @@
 
     <sec:http auto-config="false" create-session="stateless" use-expressions="true" entry-point-ref="authenticationEntryPoint"
               authentication-manager-ref="rvAuthenticationManager">
-        <!--<sec:custom-filter ref="statelessLoginFilter" before="FORM_LOGIN_FILTER"/>-->
-
-        <sec:custom-filter ref="statelessAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
+        <sec:custom-filter ref="statelessAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+        <sec:form-login authentication-success-handler-ref="authenticationSuccessHandler"/>
 
         <sec:access-denied-handler ref="accessDeniedHandler"/>
         <sec:csrf disabled="true"/>
 
-        <sec:intercept-url pattern="/login" access="permitAll" requires-channel="${security.protocol}"/>
-        <sec:intercept-url pattern="/**" access="isAuthenticated()" requires-channel="${security.protocol}"/>
+        <sec:intercept-url pattern="/**" access="isAuthenticated()"/>
     </sec:http>
 
     <sec:authentication-manager id="rvAuthenticationManager">
         <sec:authentication-provider ref="authenticationProvider"/>
     </sec:authentication-manager>
 
-    <bean id="statelessAuthenticationFilter" class="com.lc.rv.rest.auth.StatelessAuthenticationFilter">
-        <constructor-arg name="tokenAuthenticationService" ref="tokenAuthenticationService"/>
+    <bean id="authenticationSuccessHandler" class="com.lc.rv.rest.auth.StatelessAuthenticationSuccessHandler">
+        <constructor-arg name="tokenHandler" ref="tokenHandler"/>
     </bean>
 
-    <bean id="statelessLoginFilter" class="com.lc.rv.rest.auth.StatelessLoginFilter"/>
+    <bean id="statelessAuthenticationFilter" class="com.lc.rv.rest.auth.StatelessAuthenticationFilter">
+        <constructor-arg name="tokenHandler" ref="tokenHandler"/>
+    </bean>
 
-    <bean id="tokenAuthenticationService" class="com.lc.rv.rest.auth.TokenAuthenticationService">
+    <bean id="tokenHandler" class="com.lc.rv.rest.auth.TokenHandler">
         <constructor-arg name="secret" value="someSecret"/>
     </bean>
 
-    <bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-        <property name="errorPage" value="/login.html"/>
-    </bean>
+    <bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl"/>
 
     <bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
 

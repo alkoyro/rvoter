@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author Alexey.Koyro
@@ -20,13 +21,13 @@ public class RvUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User with username: " + username + " not found");
-        }
+//        User user = userService.findByUsername(username);
+//        if (user == null) {
+//            throw new UsernameNotFoundException("User with username: " + username + " not found");
+//        }
 
 
-        return new org.springframework.security.core.userdetails.User(null, null,
-                new ArrayList<SimpleGrantedAuthority>());
+        return new org.springframework.security.core.userdetails.User("someUser", "somePassword",
+                Arrays.asList(new SimpleGrantedAuthority("ADMIN")));
     }
 }
