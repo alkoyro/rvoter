@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/jee
+            http://www.springframework.org/schema/jee/spring-jee.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/data/jpa
+            http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <jpa:repositories base-package="com.lc.rv.dao" entity-manager-factory-ref="localContainerEntityManagerFactory"
+            transaction-manager-ref="jpaTransactionManager"/>
+
+
+    <jee:jndi-lookup id="rvDataSource" jndi-name="jdbc/rvDatasource"/>
+
+    <bean id="localContainerEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitManager" ref="persistenceUnitInfoManager"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties" ref="daoProperties"/>
+    </bean>
+
+    <bean id="persistenceUnitInfoManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+        <property name="defaultPersistenceUnitName" value="rvPU"/>
+        <property name="defaultDataSource" ref="rvDataSource"/>
+        <property name="packagesToScan" value="com.lc.rv.entity"/>
+    </bean>
+
+    <bean id="daoProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:/properties/dao.properties"/>
+    </bean>
+
+    <bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="localContainerEntityManagerFactory" />
+    </bean>
+
+    <tx:annotation-driven transaction-manager="jpaTransactionManager" />
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.lc.rv.dao"/>
+
+</beans>

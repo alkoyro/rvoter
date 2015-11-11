@@ -10,8 +10,12 @@
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <sec:http create-session="stateless" use-expressions="true" entry-point-ref="authenticationEntryPoint"
-              authentication-manager-ref="authenticationManager">
+    <sec:http auto-config="false" create-session="stateless" use-expressions="true" entry-point-ref="authenticationEntryPoint"
+              authentication-manager-ref="rvAuthenticationManager">
+        <!--<sec:custom-filter ref="statelessLoginFilter" before="FORM_LOGIN_FILTER"/>-->
+
+        <sec:custom-filter ref="statelessAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
+
         <sec:access-denied-handler ref="accessDeniedHandler"/>
         <sec:csrf disabled="true"/>
 
@@ -19,9 +23,19 @@
         <sec:intercept-url pattern="/**" access="isAuthenticated()" requires-channel="${security.protocol}"/>
     </sec:http>
 
-    <sec:authentication-manager id="authenticationManager">
+    <sec:authentication-manager id="rvAuthenticationManager">
         <sec:authentication-provider ref="authenticationProvider"/>
     </sec:authentication-manager>
+
+    <bean id="statelessAuthenticationFilter" class="com.lc.rv.rest.auth.StatelessAuthenticationFilter">
+        <constructor-arg name="tokenAuthenticationService" ref="tokenAuthenticationService"/>
+    </bean>
+
+    <bean id="statelessLoginFilter" class="com.lc.rv.rest.auth.StatelessLoginFilter"/>
+
+    <bean id="tokenAuthenticationService" class="com.lc.rv.rest.auth.TokenAuthenticationService">
+        <constructor-arg name="secret" value="someSecret"/>
+    </bean>
 
     <bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
         <property name="errorPage" value="/login.html"/>
