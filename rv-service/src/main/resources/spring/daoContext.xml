@@ -2,15 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context.xsd
-            http://www.springframework.org/schema/jee
-            http://www.springframework.org/schema/jee/spring-jee.xsd
             http://www.springframework.org/schema/tx
             http://www.springframework.org/schema/tx/spring-tx.xsd
             http://www.springframework.org/schema/data/jpa
@@ -19,8 +16,19 @@
     <jpa:repositories base-package="com.lc.rv.dao" entity-manager-factory-ref="localContainerEntityManagerFactory"
             transaction-manager-ref="jpaTransactionManager"/>
 
+    <context:property-placeholder location="classpath:/properties/db.properties" ignore-unresolvable="true"/>
 
-    <jee:jndi-lookup id="rvDataSource" jndi-name="jdbc/rvDatasource"/>
+    <bean id="rvDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="${db.jdbcUrl}"/>
+        <property name="user" value="${db.user}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="initialPoolSize" value="${db.initialPoolSize}"/>
+        <property name="minPoolSize" value="${db.minPoolSize}"/>
+        <property name="maxPoolSize" value="${db.maxPoolSize}"/>
+        <property name="acquireIncrement" value="${db.acquireIncrement}"/>
+        <property name="maxIdleTime" value="${db.maxIdleTime}"/>
+    </bean>
 
     <bean id="localContainerEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="persistenceUnitManager" ref="persistenceUnitInfoManager"/>

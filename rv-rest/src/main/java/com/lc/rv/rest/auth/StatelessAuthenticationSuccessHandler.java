@@ -23,6 +23,6 @@ public class StatelessAuthenticationSuccessHandler implements AuthenticationSucc
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String token = tokenHandler.generateToken(authentication);
-        response.addHeader(AUTH_HEADER_NAME, token);
+        response.getWriter().println(AUTH_HEADER_NAME + ": " + token);
     }
 }

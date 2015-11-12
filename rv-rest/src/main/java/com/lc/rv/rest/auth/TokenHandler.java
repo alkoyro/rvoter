@@ -60,7 +60,7 @@ public class TokenHandler {
         Map<String, Object> payload = new HashMap<String, Object>();
 
         String role = new ArrayList<GrantedAuthority>(authentication.getAuthorities()).get(0).getAuthority();
-        payload.put(KEY_USERNAME, authentication.getPrincipal());
+        payload.put(KEY_USERNAME, authentication.getName());
         payload.put(KEY_ROLE, role);
         
         return jwtSigner.sign(payload);

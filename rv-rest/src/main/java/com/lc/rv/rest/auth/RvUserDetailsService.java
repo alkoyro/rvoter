@@ -21,13 +21,13 @@ public class RvUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User user = userService.findByUsername(username);
-//        if (user == null) {
-//            throw new UsernameNotFoundException("User with username: " + username + " not found");
-//        }
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User with username: " + username + " not found");
+        }
 
 
-        return new org.springframework.security.core.userdetails.User("someUser", "somePassword",
+        return new org.springframework.security.core.userdetails.User("someUser", "encodedPassword",
                 Arrays.asList(new SimpleGrantedAuthority("ADMIN")));
     }
 }
