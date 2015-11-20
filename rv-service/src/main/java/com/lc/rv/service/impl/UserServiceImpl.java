@@ -1,7 +1,9 @@
 package com.lc.rv.service.impl;
 
+import com.lc.rv.dao.UserRepository;
 import com.lc.rv.entity.User;
 import com.lc.rv.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,8 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
-    public User findByUsername(String username) {
-        return null;
+    public User findByLogin(String login) {
+        return userRepository.findByLogin(login);
     }
 }

@@ -2,13 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:sec="http://www.springframework.org/schema/security"
-       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security.xsd
-        http://www.springframework.org/schema/util
-        http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:/properties/application.properties" ignore-unresolvable="true"/>
 
     <sec:http auto-config="false" create-session="stateless" use-expressions="true" entry-point-ref="authenticationEntryPoint"
               authentication-manager-ref="rvAuthenticationManager">
@@ -34,7 +36,7 @@
     </bean>
 
     <bean id="tokenHandler" class="com.lc.rv.rest.auth.TokenHandler">
-        <constructor-arg name="secret" value="someSecret"/>
+        <constructor-arg name="secret" value="${token.secret}"/>
     </bean>
 
     <bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl"/>

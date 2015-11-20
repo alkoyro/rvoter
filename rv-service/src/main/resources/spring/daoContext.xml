@@ -19,7 +19,7 @@
     <context:property-placeholder location="classpath:/properties/db.properties" ignore-unresolvable="true"/>
 
     <bean id="rvDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="driverClass" value="${db.driver}"/>
         <property name="jdbcUrl" value="${db.jdbcUrl}"/>
         <property name="user" value="${db.user}"/>
         <property name="password" value="${db.password}"/>

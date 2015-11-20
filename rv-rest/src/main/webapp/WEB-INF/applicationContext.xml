@@ -10,6 +10,7 @@
             http://www.springframework.org/schema/mvc
             http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <import resource="classpath:/spring/serviceContext.xml"/>
     <import resource="securityContext.xml"/>
 
     <mvc:annotation-driven />
