@@ -1,0 +1,1 @@
+insert into USER (LOGIN, PASSWORD, ROLE) values ('root', '$2a$10$9f76Rrfx7Ud1Nu2lEew/qeGAwtXslZf/7Fw5vD6GjVjJUPueF3dwu', 'ADMIN');
