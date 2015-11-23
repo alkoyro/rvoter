@@ -4,7 +4,9 @@ import com.lc.rv.entity.Restaurant;
 import com.lc.rv.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +18,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class RestaurantController {
 
-    private static final String DEFAULT_PAGE_NUMBER_VALUE = "0";
-    private static final Integer DEFAULT_PAGE_SIZE = 30;
-
     @Autowired
     private RestaurantService restaurantService;
 
-    @RequestMapping(value = "/restaurants", method = RequestMethod.GET)
+    @RequestMapping(value = "/restaurants", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public HttpEntity<Page<Restaurant>> getRestaurants(
-            @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER_VALUE) Integer page) {
-        PageRequest pageRequest = new PageRequest(page, DEFAULT_PAGE_SIZE);
-        Page<Restaurant> restaurantPage = restaurantService.loadAll(pageRequest);
+    public HttpEntity<PagedResources<Restaurant>> getRestaurants(Pageable pageable, PagedResourcesAssembler pagedResourcesAssembler) {
 
-        HttpEntity<Page<Restaurant>> restaurantPageHttpEntity = new ResponseEntity<Page<Restaurant>>(restaurantPage, HttpStatus.OK);
+        Page<Restaurant> restaurantPage = restaurantService.loadAll(pageable);
+
+        HttpEntity<PagedResources<Restaurant>> restaurantPageHttpEntity =
+                new ResponseEntity<PagedResources<Restaurant>>(pagedResourcesAssembler.toResource(restaurantPage), HttpStatus.OK);
+
         return restaurantPageHttpEntity;
     }
+
+
 }

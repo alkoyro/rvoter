@@ -11,7 +11,22 @@
             http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <context:component-scan base-package="com.lc.rv.rest"/>
-    <mvc:annotation-driven/>
+
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <ref bean="pageableResolver" />
+            <ref bean="pagedResourcesAssemblerArgumentResolver"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
     <mvc:default-servlet-handler/>
+
+    <bean id="pageableResolver" class="org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver"/>
+    <bean id="pagedResourcesAssemblerArgumentResolver" class="org.springframework.data.web.PagedResourcesAssemblerArgumentResolver">
+        <constructor-arg name="resolver" ref="pageableResolver"/>
+        <constructor-arg name="linkBuilderFactory">
+            <null/>
+        </constructor-arg>
+    </bean>
 
 </beans>
