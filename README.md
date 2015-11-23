@@ -14,6 +14,16 @@ Restaurant voter
 
 ### Database configuration ###
 
-### Running Application ###
+### Running Application (cURL) ###
+* Login into app
+```
+curl -X GET "http://localhost:8080/rv-rest/login" --data "username=root&password=root"
+```
+** Note: response will return an X-AUTH-TOKEN which will be used for accessing protected resources (via header)
+
+* Load all restaurants
+```
+curl -H "X-AUTH-TOKEN:YOUR_TOKEN" -H "Content-Type: application/json" -X GET "http://localhost:8080/rv-rest/restaurants?page=0&size=15"
+```
 
 ### Other guidelines ###
