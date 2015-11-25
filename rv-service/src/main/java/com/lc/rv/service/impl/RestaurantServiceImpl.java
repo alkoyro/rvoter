@@ -21,4 +21,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Page<Restaurant> loadAll(Pageable pageable) {
         return restaurantRepository.findAll(pageable);
     }
+
+    @Override
+    public Restaurant addRestaurant(Restaurant restaurant) {
+        if (restaurant.getId() != null) {
+            throw new IllegalArgumentException("Not allowed to add new restraurant with existing id");
+        }
+        return restaurantRepository.save(restaurant);
+    }
 }
